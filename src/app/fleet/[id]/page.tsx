@@ -62,7 +62,7 @@ export default function CarDetailPage() {
     ? car.gallery
     : car.images.map((url, idx) => ({
         url,
-        tag: idx === 0 ? 'Exterior' : idx === 1 ? 'Interior' : idx === 2 ? 'Dashboard' : 'Rear',
+        tag: (idx === 0 ? 'Exterior' : idx === 1 ? 'Interior' : idx === 2 ? 'Dashboard' : 'Rear') as CarGalleryItem['tag'],
       }));
 
   const activeImage = galleryItems[activeImageIndex]?.url || car.images[0];

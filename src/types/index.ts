@@ -1,6 +1,6 @@
 export interface CarGalleryItem {
   url: string;
-  tag: 'Exterior' | 'Interior' | 'Dashboard' | 'Boot';
+  tag: 'Exterior' | 'Interior' | 'Dashboard' | 'Boot' | 'Rear';
 }
 
 export interface Car {
