@@ -1,12 +1,14 @@
 const WHATSAPP_PHONE_NUMBER = '15552345678'; // Primary WhatsApp Contact
 
 export function getWhatsAppLink(params?: {
+  phoneNumber?: string;
   carName?: string;
   startDate?: string;
   endDate?: string;
   location?: string;
   customMessage?: string;
 }) {
+  const phone = params?.phoneNumber || WHATSAPP_PHONE_NUMBER;
   let message = 'Hello Hail Mary Rental Services! I would like to inquire about luxury car rentals.';
 
   if (params?.carName) {
@@ -23,7 +25,7 @@ export function getWhatsAppLink(params?: {
   }
 
   const encodedMessage = encodeURIComponent(message);
-  return `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodedMessage}`;
+  return `https://wa.me/${phone}?text=${encodedMessage}`;
 }
 
 export async function logWhatsAppLeadAndOpen(carName?: string, clientPhone?: string) {
