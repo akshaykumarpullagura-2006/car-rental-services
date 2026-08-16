@@ -168,7 +168,7 @@ export default function AdminFleetPage() {
         body: JSON.stringify(carPayload),
       });
 
-      setCars(cars.map((c) => (c.id === editingCar.id ? { ...c, ...carPayload, id: editingCar.id } : c)));
+      setCars(cars.map((c) => (c.id === editingCar.id ? ({ ...c, ...carPayload, id: editingCar.id } as Car) : c)));
     } else {
       const res = await fetch('/api/fleet', {
         method: 'POST',

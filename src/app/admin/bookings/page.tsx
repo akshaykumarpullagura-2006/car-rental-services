@@ -106,7 +106,7 @@ export default function AdminBookingsPage() {
     });
 
     setBookings(
-      bookings.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
+      bookings.map((b) => (b.id === id ? { ...b, status: newStatus as Booking['status'] } : b))
     );
   };
 
