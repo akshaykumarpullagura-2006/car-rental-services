@@ -141,7 +141,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenQuoteModal }) =>
     [setCategory]
   );
 
-  // Auto-play slideshow timer removed so images stay static and do not change on their own.
+  // Auto-play slideshow timer: changes hero vehicle image slide every 3 seconds (3000ms)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIdx) => {
+        const nextIdx = (prevIdx + 1) % 4;
+        const catKeys = ['ultraluxury', 'luxury', 'medium', 'basic'] as const;
+        setCategory(catKeys[nextIdx]);
+        return nextIdx;
+      });
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [setCategory]);
 
   const currentSlide = fourCategorySlides[currentIndex] || fourCategorySlides[0];
   const currentCar = currentSlide;
