@@ -1,0 +1,137 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Car {
+  id           String    @id @default(uuid())
+  name         String
+  brand        String
+  model        String
+  year         Int
+  category     String    // e.g. "Supercar", "Luxury SUV", "Executive Sedan", "Ultra Luxury", "Convertible"
+  transmission String    // "Automatic", "Dual-Clutch", etc.
+  seating      Int
+  engine       String    // e.g. "6.75L V12 Twin-Turbo", "4.0L V8 Twin-Turbo"
+  horsepower   Int
+  zeroToSixty  String    // e.g. "3.7s"
+  topSpeed     String    // e.g. "190 mph"
+  pricePerDay  Float
+  pricePerWeek Float?
+  pricePerMonth Float?
+  deposit      Float
+  status       String    @default("AVAILABLE") // "AVAILABLE", "RENTED", "MAINTENANCE"
+  featured     Boolean   @default(false)
+  imagesJson   String    // JSON string array of image URLs
+  specsJson    String    // JSON string object of key-value specs
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  leads        Lead[]
+  bookings     Booking[]
+}
+
+model Lead {
+  id           String    @id @default(uuid())
+  leadNumber   String    @unique
+  carId        String?
+  car          Car?      @relation(fields: [carId], references: [id], onDelete: SetNull)
+  carName      String?
+  clientName   String
+  clientPhone  String
+  clientEmail  String?
+  startDate    String?
+  endDate      String?
+  location     String?
+  notes        String?
+  status       String    @default("NEW") // "NEW", "CONTACTED", "NEGOTIATING", "CONVERTED", "LOST"
+  source       String    @default("contact-form") // "contact-form", "quote-modal", "whatsapp-click"
+  budget       String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  bookings     Booking[]
+}
+
+model Booking {
+  id            String   @id @default(uuid())
+  bookingNumber String   @unique
+  leadId        String?
+  lead          Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  carId         String
+  car           Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  clientName    String
+  clientPhone   String
+  clientEmail   String?
+  startDate     String
+  endDate       String
+  totalAmount   Float
+  depositPaid   Float    @default(0)
+  status        String   @default("CONFIRMED") // "CONFIRMED", "ACTIVE", "COMPLETED", "CANCELLED"
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Customer {
+  id            String   @id @default(uuid())
+  name          String
+  phone         String   @unique
+  email         String?
+  totalBookings Int      @default(0)
+  totalSpent    Float    @default(0)
+  vipStatus     Boolean  @default(false)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  author    String
+  role      String
+  rating    Int      @default(5)
+  content   String
+  avatarUrl String?
+  featured  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Brand {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  logoUrl   String?
+  featured  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model SiteContent {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  category  String   @default("general")
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  message   String
+  type      String   @default("lead") // "lead", "booking", "system"
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

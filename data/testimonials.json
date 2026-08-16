@@ -1,0 +1,92 @@
+[
+  {
+    "id": "t-101",
+    "author": "Rohan Kapoor",
+    "phone": "+91 98200 12345",
+    "rating": 5,
+    "content": "Rented the Rolls-Royce Cullinan for a family wedding in Mumbai. Handoff was completed within 20 minutes at Bandra Kurla Complex. Absolute VIP experience!",
+    "status": "APPROVED",
+    "featured": true
+  },
+  {
+    "id": "t-102",
+    "author": "Ananya Deshmukh",
+    "phone": "+91 99301 67890",
+    "rating": 5,
+    "content": "The Mahindra Thar 4x4 was immaculate for our weekend drive. Pristine condition, smooth booking, and instant response on WhatsApp.",
+    "status": "APPROVED",
+    "featured": true
+  },
+  {
+    "id": "t-103",
+    "author": "Vikramaditya Singhania",
+    "phone": "+91 98110 54321",
+    "rating": 5,
+    "content": "Booked the Lamborghini Urus Performante for a corporate gala in Delhi NCR. The exhaust sound and supercar response were mind-blowing. Exceptional service!",
+    "status": "APPROVED",
+    "featured": true
+  },
+  {
+    "id": "t-104",
+    "author": "Priya Nambiar",
+    "phone": "+91 97402 98765",
+    "rating": 5,
+    "content": "Toyota Fortuner GR-Sport was delivered right to Bengaluru airport doorstep. Cleanest luxury SUV I have ever driven in India.",
+    "status": "APPROVED",
+    "featured": true
+  },
+  {
+    "id": "t-105",
+    "author": "Aditya Verma",
+    "phone": "+91 98450 34567",
+    "rating": 5,
+    "content": "Rented the Mercedes-AMG G 63 G-Wagon for a VIP road trip. Seamless paperwork, transparent deposit terms, and zero hidden charges.",
+    "status": "APPROVED",
+    "featured": true
+  },
+  {
+    "id": "t-106",
+    "author": "Kavya Reddy",
+    "phone": "+91 99890 87654",
+    "rating": 5,
+    "content": "The Porsche Taycan Turbo S EV was an absolute dream to drive in Hyderabad. Super fast charging setup and polite concierge team.",
+    "status": "APPROVED",
+    "featured": true
+  },
+  {
+    "id": "t-107",
+    "author": "Rajesh Iyer",
+    "phone": "+91 98401 23456",
+    "rating": 5,
+    "content": "Self-drove the Suzuki Swift ZXi for business meetings across Chennai. Extremely economical, clean interior, and effortless handoff.",
+    "status": "APPROVED",
+    "featured": true
+  },
+  {
+    "id": "t-108",
+    "author": "Sneha Malhotra",
+    "phone": "+91 98180 76543",
+    "rating": 5,
+    "content": "Mercedes-Maybach S 580 chauffeur service for our anniversary in Gurgaon was unforgettable. First-class luxury with reclining calf-rest seats!",
+    "status": "APPROVED",
+    "featured": true
+  },
+  {
+    "id": "t-109",
+    "author": "Karan Bhasin",
+    "phone": "+91 98711 45678",
+    "rating": 5,
+    "content": "Land Rover Defender 130 V8 had plenty of space for all 8 of us on our mountain retreat. Powerful engine and rugged comfort.",
+    "status": "APPROVED",
+    "featured": true
+  },
+  {
+    "id": "t-110",
+    "author": "Devendra Patel",
+    "phone": "+91 98250 89012",
+    "rating": 5,
+    "content": "Rented the BMW M4 Competition Convertible for a coastal drive in Gujarat. Top-tier supercar performance and instant WhatsApp booking.",
+    "status": "APPROVED",
+    "featured": true
+  }
+]

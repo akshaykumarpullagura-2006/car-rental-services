@@ -1,0 +1,447 @@
+import { PrismaClient } from '@prisma/client';
+import { Car, Lead } from '@/types';
+
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  });
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+
+export const MOCK_CARS: Car[] = [
+  {
+    id: 'car-cullinan-01',
+    slug: 'rolls-royce-cullinan-black-badge',
+    name: 'Rolls-Royce Cullinan Black Badge',
+    brand: 'Rolls-Royce',
+    model: 'Cullinan Black Badge',
+    year: 2024,
+    category: 'Ultra Luxury',
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    seating: 5,
+    engine: '6.75L V12 Twin-Turbo',
+    horsepower: 600,
+    zeroToSixty: '4.9s',
+    topSpeed: '155 mph',
+    mileage: '14 mpg',
+    pricePerDay: 185000,
+    pricePerWeek: 1100000,
+    pricePerMonth: 3800000,
+    deposit: 300000,
+    driverCharges: 5000,
+    extraKmCharge: 250,
+    status: 'AVAILABLE',
+    featured: true,
+    images: [
+      'https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1631295868223-63265b40d9e4?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1200&auto=format&fit=crop'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: 'https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=1200&auto=format&fit=crop' },
+      { tag: 'Interior', url: 'https://images.unsplash.com/photo-1631295868223-63265b40d9e4?q=80&w=1200&auto=format&fit=crop' },
+      { tag: 'Dashboard', url: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1200&auto=format&fit=crop' }
+    ],
+    features: ['AC', 'GPS', 'Bluetooth', 'Airbags', 'Automatic', 'Chauffeur Available', 'Sunroof', 'Starlight Headliner'],
+    specs: {
+      'Drivetrain': 'All-Wheel Drive',
+      'Interior': 'Bespoke Starlight Headliner & Mandarin Leather',
+      'Audio System': 'Bespoke 18-Speaker Audio System',
+      'Chassis': 'Magic Carpet Ride Air Suspension',
+      'Luggage Capacity': '3 Large Suitcases'
+    }
+  },
+  {
+    id: 'car-urus-02',
+    slug: 'lamborghini-urus-performante',
+    name: 'Lamborghini Urus Performante',
+    brand: 'Lamborghini',
+    model: 'Urus Performante',
+    year: 2024,
+    category: 'Ultra Luxury',
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    seating: 5,
+    engine: '4.0L Twin-Turbo V8',
+    horsepower: 657,
+    zeroToSixty: '3.1s',
+    topSpeed: '190 mph',
+    mileage: '16 mpg',
+    pricePerDay: 145000,
+    pricePerWeek: 870000,
+    pricePerMonth: 2900000,
+    deposit: 250000,
+    driverCharges: 4000,
+    extraKmCharge: 200,
+    status: 'AVAILABLE',
+    featured: true,
+    images: [
+      'https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: 'https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=1200&auto=format&fit=crop' },
+      { tag: 'Interior', url: 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop' }
+    ],
+    features: ['AC', 'GPS', 'Bluetooth', 'Airbags', 'Automatic', 'Akrapovič Titanium Exhaust', 'Carbon Fiber Bonnet'],
+    specs: {
+      'Drivetrain': 'AWD with Rear-Torque Vectoring',
+      'Exhaust': 'Akrapovič Titanium Sports Exhaust',
+      'Aerodynamics': 'Carbon Fiber Bonnet & Rear Spoiler',
+      'Drive Modes': 'Strada, Sport, Corsa, Rally',
+      'Luggage Capacity': '2 Large Suitcases'
+    }
+  },
+  {
+    id: 'car-g63-03',
+    slug: 'mercedes-amg-g-63',
+    name: 'Mercedes-AMG G 63 Grand Edition',
+    brand: 'Mercedes-Benz',
+    model: 'G 63 AMG',
+    year: 2024,
+    category: 'Luxury',
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    seating: 5,
+    engine: '4.0L V8 Biturbo',
+    horsepower: 577,
+    zeroToSixty: '4.5s',
+    topSpeed: '149 mph',
+    mileage: '13 mpg',
+    pricePerDay: 115000,
+    pricePerWeek: 690000,
+    pricePerMonth: 2300000,
+    deposit: 200000,
+    driverCharges: 3500,
+    extraKmCharge: 180,
+    status: 'LIMITED',
+    featured: true,
+    images: [
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUjtNS1OiJsqy1qERCgwxg1cvt7rmgM4vQ7oqJcRCzFhrabLZeTZS_xEY&s=10'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1200&auto=format&fit=crop' },
+      { tag: 'Interior', url: 'https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?q=80&w=1200&auto=format&fit=crop' }
+    ],
+    features: ['AC', 'GPS', 'Bluetooth', 'Airbags', 'Automatic', '3 Locking Diffs', 'Burmester Sound'],
+    specs: {
+      'Engine': '4.0L V8 Biturbo',
+      'Mileage': '13 mpg'
+    }
+  },
+  {
+    id: 'car-taycan-04',
+    slug: 'porsche-taycan-turbo-s',
+    name: 'Porsche Taycan Turbo S Electric',
+    brand: 'Porsche',
+    model: 'Taycan Turbo S',
+    year: 2024,
+    category: 'Electric',
+    fuelType: 'Electric',
+    transmission: 'Automatic',
+    seating: 4,
+    engine: 'Dual Permanent Magnet Synchronous',
+    horsepower: 750,
+    zeroToSixty: '2.6s',
+    topSpeed: '161 mph',
+    mileage: '278 mi range',
+    pricePerDay: 95000,
+    pricePerWeek: 570000,
+    pricePerMonth: 1900000,
+    deposit: 150000,
+    driverCharges: 3000,
+    extraKmCharge: 150,
+    status: 'AVAILABLE',
+    featured: true,
+    images: [
+      'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1200&auto=format&fit=crop' },
+      { tag: 'Interior', url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop' }
+    ],
+    features: ['AC', 'GPS', 'Bluetooth', 'Airbags', 'Automatic', '800V Rapid Charge', 'Porsche Ceramic Brakes'],
+    specs: {
+      'Battery': '93.4 kWh Performance Battery Plus',
+      'Charging': '5% to 80% in 22.5 minutes',
+      'Drivetrain': 'All-Wheel Drive with 2-Speed Transmission',
+      'Luggage Capacity': '2 Suitcases + Frunk'
+    }
+  },
+  {
+    id: 'car-sclass-05',
+    slug: 'mercedes-maybach-s-580',
+    name: 'Mercedes-Maybach S 580 Sedan',
+    brand: 'Mercedes-Benz',
+    model: 'Maybach S 580',
+    year: 2024,
+    category: 'Sedan',
+    fuelType: 'Hybrid',
+    transmission: 'Automatic',
+    seating: 4,
+    engine: '4.0L V8 Biturbo Mild-Hybrid',
+    horsepower: 496,
+    zeroToSixty: '4.7s',
+    topSpeed: '155 mph',
+    mileage: '21 mpg',
+    pricePerDay: 125000,
+    pricePerWeek: 750000,
+    pricePerMonth: 2500000,
+    deposit: 200000,
+    driverCharges: 3500,
+    extraKmCharge: 180,
+    status: 'RENTED',
+    featured: false,
+    images: [
+      'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1200&auto=format&fit=crop'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1200&auto=format&fit=crop' },
+      { tag: 'Interior', url: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1200&auto=format&fit=crop' }
+    ],
+    features: ['AC', 'GPS', 'Bluetooth', 'Airbags', 'Automatic', 'First Class Calf Rest Seats', 'Refrigerated Compartment'],
+    specs: {
+      'Drivetrain': '4MATIC All-Wheel Drive',
+      'Seating': 'Executive Rear Reclining Seats',
+      'Sound': 'Burmester High-End 4D Surround Sound',
+      'Luggage Capacity': '3 Large Suitcases'
+    }
+  },
+  {
+    id: 'car-defender-06',
+    slug: 'range-rover-defender-130-v8',
+    name: 'Land Rover Defender 130 V8 MUV',
+    brand: 'Land Rover',
+    model: 'Defender 130 V8',
+    year: 2024,
+    category: 'MUV',
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    seating: 8,
+    engine: '5.0L Supercharged V8',
+    horsepower: 518,
+    zeroToSixty: '5.4s',
+    topSpeed: '149 mph',
+    mileage: '15 mpg',
+    pricePerDay: 65000,
+    pricePerWeek: 390000,
+    pricePerMonth: 1300000,
+    deposit: 100000,
+    driverCharges: 2500,
+    extraKmCharge: 100,
+    status: 'AVAILABLE',
+    featured: false,
+    images: [
+      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=1200&auto=format&fit=crop'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop' },
+      { tag: 'Interior', url: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=1200&auto=format&fit=crop' }
+    ],
+    features: ['AC', 'GPS', 'Bluetooth', 'Airbags', 'Automatic', '8 Passenger Capacity', 'Terrain Response 2'],
+    specs: {
+      'Drivetrain': 'Intelligent AWD with Twin-Speed Transfer Box',
+      'Seating': '8 Full-Size Adult Seats',
+      'Towing': '8,201 lbs Capacity',
+      'Luggage Capacity': '4 Large Suitcases'
+    }
+  },
+  {
+    id: 'car-m4-07',
+    slug: 'bmw-m4-competition-convertible',
+    name: 'BMW M4 Competition Convertible',
+    brand: 'BMW',
+    model: 'M4 Competition xDrive',
+    year: 2024,
+    category: 'Self Drive',
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    seating: 4,
+    engine: '3.0L Twin-Turbo Inline-6',
+    horsepower: 503,
+    zeroToSixty: '3.6s',
+    topSpeed: '180 mph',
+    mileage: '19 mpg',
+    pricePerDay: 55000,
+    pricePerWeek: 330000,
+    pricePerMonth: 1100000,
+    deposit: 100000,
+    driverCharges: 2000,
+    extraKmCharge: 90,
+    status: 'COMING_SOON',
+    featured: false,
+    images: [
+      'https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=1200&auto=format&fit=crop' },
+      { tag: 'Interior', url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop' }
+    ],
+    features: ['AC', 'GPS', 'Bluetooth', 'Airbags', 'Automatic', 'Soft Top Roof', 'M Carbon Bucket Seats'],
+    specs: {
+      'Drivetrain': 'M xDrive AWD with 2WD Drift Mode',
+      'Roof': 'Panel Soft Top (Opens in 18s up to 31mph)',
+      'Luggage Capacity': '2 Medium Suitcases'
+    }
+  },
+  {
+    id: 'car-a3-08',
+    slug: 'audi-rs3-sportback',
+    name: 'Audi RS3 Sportback Hatchback',
+    brand: 'Audi',
+    model: 'RS3 Sportback',
+    year: 2024,
+    category: 'Hatchback',
+    fuelType: 'Petrol',
+    transmission: 'Dual-Clutch',
+    seating: 5,
+    engine: '2.5L 5-Cylinder Turbocharged',
+    horsepower: 401,
+    zeroToSixty: '3.6s',
+    topSpeed: '180 mph',
+    mileage: '23 mpg',
+    pricePerDay: 42000,
+    pricePerWeek: 250000,
+    pricePerMonth: 850000,
+    deposit: 75000,
+    driverCharges: 1800,
+    extraKmCharge: 75,
+    status: 'AVAILABLE',
+    featured: false,
+    images: [
+      'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1541348263662-e082662d82da?q=80&w=1200&auto=format&fit=crop'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=1200&auto=format&fit=crop' },
+      { tag: 'Interior', url: 'https://images.unsplash.com/photo-1541348263662-e082662d82da?q=80&w=1200&auto=format&fit=crop' }
+    ],
+    features: ['AC', 'GPS', 'Bluetooth', 'Airbags', 'Dual-Clutch', 'RS Torque Splitter', 'Bang & Olufsen Sound'],
+    specs: {
+      'Drivetrain': 'Quattro AWD with RS Torque Rear Vectoring',
+      'Exhaust': 'RS Sport Exhaust System',
+      'Luggage Capacity': '2 Suitcases'
+    }
+  },
+  {
+    id: 'car-swift-09',
+    slug: 'suzuki-swift-zxi',
+    name: 'Suzuki Swift ZXi Premium',
+    brand: 'Suzuki',
+    model: 'Swift ZXi',
+    year: 2024,
+    category: 'Basic',
+    fuelType: 'Petrol',
+    transmission: 'Manual / Automatic',
+    seating: 5,
+    engine: '1.2L DualJet VVT',
+    horsepower: 89,
+    zeroToSixty: '11.2s',
+    topSpeed: '110 mph',
+    mileage: '45 mpg',
+    pricePerDay: 2500,
+    pricePerWeek: 15000,
+    pricePerMonth: 50000,
+    deposit: 5000,
+    driverCharges: 800,
+    extraKmCharge: 15,
+    status: 'AVAILABLE',
+    featured: true,
+    images: [
+      '/images/swift-3d.png'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: '/images/swift-3d.png' }
+    ],
+    features: ['AC', 'Touchscreen Infotainment', 'Bluetooth', 'Airbags', 'ABS', 'Reverse Camera'],
+    specs: {
+      'Drivetrain': 'Front-Wheel Drive',
+      'Fuel Efficiency': '22.5 km/l',
+      'Luggage Capacity': '2 Medium Bags'
+    }
+  },
+  {
+    id: 'car-thar-10',
+    slug: 'mahindra-thar-4x4',
+    name: 'Mahindra Thar LX 4x4 Hardtop',
+    brand: 'Mahindra',
+    model: 'Thar LX 4x4',
+    year: 2024,
+    category: 'Medium',
+    fuelType: 'Diesel / Petrol',
+    transmission: 'Automatic',
+    seating: 4,
+    engine: '2.0L mStallion TGDi',
+    horsepower: 150,
+    zeroToSixty: '9.5s',
+    topSpeed: '100 mph',
+    mileage: '30 mpg',
+    pricePerDay: 5500,
+    pricePerWeek: 33000,
+    pricePerMonth: 110000,
+    deposit: 10000,
+    driverCharges: 1000,
+    extraKmCharge: 20,
+    status: 'AVAILABLE',
+    featured: true,
+    images: [
+      '/images/thar-3d.jpg'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: '/images/thar-3d.jpg' }
+    ],
+    features: ['AC', '4x4 Shift-on-Fly', 'Touchscreen', 'Roll Cage', 'Convertible / Hardtop', 'Off-Road Bumpers'],
+    specs: {
+      'Drivetrain': 'Low-Range 4x4 Off-Road Lock',
+      'Ground Clearance': '226 mm',
+      'Wading Depth': '650 mm'
+    }
+  },
+  {
+    id: 'car-fortuner-11',
+    slug: 'toyota-fortuner-gr-sport',
+    name: 'Toyota Fortuner GR-Sport 4x4',
+    brand: 'Toyota',
+    model: 'Fortuner GR-Sport',
+    year: 2024,
+    category: 'Luxury',
+    fuelType: 'Diesel',
+    transmission: 'Automatic',
+    seating: 7,
+    engine: '2.8L D-4D Turbo Diesel',
+    horsepower: 201,
+    zeroToSixty: '9.8s',
+    topSpeed: '120 mph',
+    mileage: '32 mpg',
+    pricePerDay: 9500,
+    pricePerWeek: 57000,
+    pricePerMonth: 190000,
+    deposit: 20000,
+    driverCharges: 1500,
+    extraKmCharge: 30,
+    status: 'AVAILABLE',
+    featured: true,
+    images: [
+      '/images/fortuner-3d.png'
+    ],
+    gallery: [
+      { tag: 'Exterior', url: '/images/fortuner-3d.png' }
+    ],
+    features: ['AC', 'GPS', 'JBL 11-Speaker Audio', 'Ventilated Leather Seats', 'Power Tailgate', 'Toyota Safety Sense'],
+    specs: {
+      'Drivetrain': '4x4 High/Low Range Torque Vectoring',
+      'Seating': '7 Executive Leather Reclining Seats',
+      'Luggage Capacity': '4 Suitcases'
+    }
+  }
+];
+
+export const MOCK_LEADS: Lead[] = [];

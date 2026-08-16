@@ -1,0 +1,18 @@
+[
+  {
+    "id": "book-1785772568230",
+    "bookingNumber": "HM-BOOK-2555",
+    "status": "CONFIRMED",
+    "createdAt": "2026-08-03T15:56:08.230Z",
+    "carId": "car-taycan-04",
+    "carName": "Porsche Taycan Turbo S Electric",
+    "clientName": "akshay",
+    "clientPhone": "7396840700",
+    "clientEmail": "",
+    "startDate": "2026-08-03",
+    "endDate": "2026-08-06",
+    "totalAmount": 285000,
+    "depositPaid": 150000,
+    "notes": ""
+  }
+]
