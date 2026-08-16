@@ -2,51 +2,50 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Car, ArrowRight } from 'lucide-react';
+import { Car } from 'lucide-react';
 
 // ============================================================================
-// 🎬 HAIL MARY RENTAL SERVICES — CINEMATIC INTRO CONFIGURATION
+// 🏎️ HAIL MARY RENTAL SERVICES — PREMIUM LAMBORGHINI LOADER CONFIGURATION
 // ============================================================================
-export const INTRO_CONFIG = {
-  SHOW_INTRO: true,
-  INTRO_PLAY_ONCE_PER_SESSION: true,
-  SKIP_BUTTON_ENABLED: true,
-  DESKTOP_VIDEO_PATH: '/videos/intro.mp4',
-  MOBILE_VIDEO_PATH: '/videos/intro-mobile.mp4',
-  SESSION_STORAGE_KEY: 'hailmary_intro_played',
+export const LOADER_CONFIG = {
+  SHOW_LUXURY_LOADER: true,
+  LOADER_PLAY_ONCE_PER_SESSION: true,
+  SESSION_STORAGE_KEY: 'hailmary_lamborghini_loader_played',
+  VIDEO_PATH: '/videos/lamborghini-intro.mp4',
 };
 
 export const IntroAnimation: React.FC = () => {
   const [active, setActive] = useState<boolean>(false);
-  const [phase, setPhase] = useState<'video' | 'logo' | 'fadeout' | 'ended'>('video');
+  const [phase, setPhase] = useState<'animating' | 'fadeout' | 'ended'>('animating');
   const [useCanvasFallback, setUseCanvasFallback] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // 1. Initial Session & Reduced Motion Checks
   useEffect(() => {
-    if (!INTRO_CONFIG.SHOW_INTRO) {
+    if (!LOADER_CONFIG.SHOW_LUXURY_LOADER) {
       setActive(false);
       return;
     }
 
-    // Reduced motion preference check
+    // Check reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
       setActive(false);
       return;
     }
 
-    // Session replay check
-    if (INTRO_CONFIG.INTRO_PLAY_ONCE_PER_SESSION && typeof window !== 'undefined') {
-      const hasPlayed = sessionStorage.getItem(INTRO_CONFIG.SESSION_STORAGE_KEY);
+    // Check session storage
+    if (LOADER_CONFIG.LOADER_PLAY_ONCE_PER_SESSION && typeof window !== 'undefined') {
+      const hasPlayed = sessionStorage.getItem(LOADER_CONFIG.SESSION_STORAGE_KEY);
       if (hasPlayed === 'true') {
         setActive(false);
         return;
       }
     }
 
-    // Enable Intro & Lock Body Scroll
     setActive(true);
     document.body.style.overflow = 'hidden';
 
@@ -55,23 +54,60 @@ export const IntroAnimation: React.FC = () => {
     };
   }, []);
 
-  // 2. Video Playback & Fallback Detection
+  // 2. Loading Progress Counter & Sequence Timer (3.5 Seconds Total)
   useEffect(() => {
     if (!active) return;
 
-    // Timeout fallback: if video doesn't play within 1.5s, switch to built-in canvas generator
-    const timeout = setTimeout(() => {
+    const startTime = Date.now();
+    const duration = 3200; // 3.2s animation phase
+
+    const progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const pct = Math.min(Math.round((elapsed / duration) * 100), 100);
+      setProgress(pct);
+
+      if (pct >= 100) {
+        clearInterval(progressInterval);
+        setPhase('fadeout');
+      }
+    }, 30);
+
+    return () => clearInterval(progressInterval);
+  }, [active]);
+
+  // 3. Complete Exit & Cleanup
+  useEffect(() => {
+    if (!active || phase !== 'fadeout') return;
+
+    const fadeTimer = setTimeout(() => {
+      setPhase('ended');
+      setActive(false);
+      document.body.style.overflow = '';
+
+      if (LOADER_CONFIG.LOADER_PLAY_ONCE_PER_SESSION && typeof window !== 'undefined') {
+        sessionStorage.setItem(LOADER_CONFIG.SESSION_STORAGE_KEY, 'true');
+      }
+    }, 600);
+
+    return () => clearTimeout(fadeTimer);
+  }, [active, phase]);
+
+  // 4. Video Error Handling & Canvas Fallback Trigger
+  useEffect(() => {
+    if (!active) return;
+
+    const videoTimer = setTimeout(() => {
       if (videoRef.current && videoRef.current.paused) {
         setUseCanvasFallback(true);
       }
-    }, 1500);
+    }, 1200);
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(videoTimer);
   }, [active]);
 
-  // 3. Built-in Canvas Fallback Generator (Cinematic Supercar Ambient Lights Reveal)
+  // 5. Built-in Lamborghini HTML5 Canvas Fallback Engine
   useEffect(() => {
-    if (!active || !useCanvasFallback || phase !== 'video') return;
+    if (!active || !useCanvasFallback || phase !== 'animating') return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -79,243 +115,207 @@ export const IntroAnimation: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animId: number;
     let startTime: number | null = null;
-    const duration = 5000; // 5.0 seconds automotive camera sweep
+    const duration = 3200;
 
-    const resizeCanvas = () => {
+    const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    resize();
+    window.addEventListener('resize', resize);
 
     const render = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const p = Math.min(elapsed / duration, 1);
 
-      const width = canvas.width;
-      const height = canvas.height;
+      const w = canvas.width;
+      const h = canvas.height;
 
-      // Dark background
-      ctx.fillStyle = '#050505';
-      ctx.fillRect(0, 0, width, height);
+      // Off-white Hail Mary background
+      ctx.fillStyle = '#F5F5F3';
+      ctx.fillRect(0, 0, w, h);
 
-      const centerX = width / 2;
-      const centerY = height / 2;
+      // Car position: Left -> Right
+      const carW = Math.min(w * 0.45, 480);
+      const carH = carW * 0.38;
+      const startX = -carW - 100;
+      const endX = w + 100;
+      const carX = startX + p * (endX - startX);
+      const carY = h * 0.54;
 
-      // Phase A: Volumetric Ambient Spotlight Sweep (0% - 60%)
-      const spotOpacity = Math.sin(progress * Math.PI) * 0.8;
-      const lightY = centerY - 20 + progress * 40;
+      // Subtle Road Line
+      const roadY = carY + carH * 0.75;
+      ctx.strokeStyle = 'rgba(17, 17, 17, 0.12)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.1, roadY);
+      ctx.lineTo(w * 0.9, roadY);
+      ctx.stroke();
 
-      const gradient = ctx.createRadialGradient(
-        centerX, lightY, 10,
-        centerX, lightY, width * 0.6
-      );
-      gradient.addColorStop(0, `rgba(255, 255, 255, ${spotOpacity * 0.35})`);
-      gradient.addColorStop(0.3, `rgba(180, 200, 255, ${spotOpacity * 0.15})`);
-      gradient.addColorStop(1, 'rgba(5, 5, 5, 0)');
+      // Active Light Trail under car
+      ctx.strokeStyle = 'rgba(17, 17, 17, 0.8)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.1, roadY);
+      ctx.lineTo(Math.min(w * 0.1 + p * (w * 0.8), w * 0.9), roadY);
+      ctx.stroke();
 
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
+      // Draw Lamborghini Supercar Silhouette
+      ctx.save();
+      ctx.translate(carX, carY);
 
-      // Phase B: Supercar Silhouette Beam & LED Headlights Reveal (20% - 85%)
-      if (progress > 0.15 && progress < 0.9) {
-        const carProgress = (progress - 0.15) / 0.75;
-        const scale = 0.8 + carProgress * 0.35;
-        const headlightAlpha = Math.min(carProgress * 2, 1) * Math.sin(carProgress * Math.PI);
+      // Car Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+      ctx.beginPath();
+      ctx.ellipse(carW * 0.5, carH * 0.78, carW * 0.48, carH * 0.12, 0, 0, Math.PI * 2);
+      ctx.fill();
 
-        // Twin LED Headlight Beams
-        const leftHeadlightX = centerX - 180 * scale;
-        const rightHeadlightX = centerX + 180 * scale;
-        const headlightY = centerY + 30 * scale;
+      // Body Silhouette
+      ctx.fillStyle = '#111111';
+      ctx.beginPath();
+      ctx.moveTo(0, carH * 0.65);
+      ctx.quadraticCurveTo(carW * 0.1, carH * 0.55, carW * 0.22, carH * 0.4);
+      ctx.quadraticCurveTo(carW * 0.35, carH * 0.12, carW * 0.62, carH * 0.12);
+      ctx.quadraticCurveTo(carW * 0.82, carH * 0.35, carW * 0.95, carH * 0.58);
+      ctx.quadraticCurveTo(carW * 0.99, carH * 0.65, carW, carH * 0.7);
+      ctx.lineTo(0, carH * 0.7);
+      ctx.closePath();
+      ctx.fill();
 
-        [leftHeadlightX, rightHeadlightX].forEach((hx) => {
-          const hBeam = ctx.createRadialGradient(hx, headlightY, 2, hx, headlightY, 120 * scale);
-          hBeam.addColorStop(0, `rgba(255, 255, 255, ${headlightAlpha})`);
-          hBeam.addColorStop(0.2, `rgba(220, 235, 255, ${headlightAlpha * 0.6})`);
-          hBeam.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      // Glass Windshield
+      ctx.fillStyle = '#333333';
+      ctx.beginPath();
+      ctx.moveTo(carW * 0.36, carH * 0.4);
+      ctx.lineTo(carW * 0.48, carH * 0.16);
+      ctx.lineTo(carW * 0.62, carH * 0.16);
+      ctx.lineTo(carW * 0.66, carH * 0.4);
+      ctx.closePath();
+      ctx.fill();
 
-          ctx.fillStyle = hBeam;
-          ctx.beginPath();
-          ctx.arc(hx, headlightY, 120 * scale, 0, Math.PI * 2);
-          ctx.fill();
-        });
+      // LED Headlight Beam (front right side)
+      const beamGrad = ctx.createLinearGradient(carW * 0.95, carH * 0.55, carW * 1.5, carH * 0.65);
+      beamGrad.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+      beamGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = beamGrad;
+      ctx.beginPath();
+      ctx.moveTo(carW * 0.92, carH * 0.52);
+      ctx.lineTo(carW * 1.5, carH * 0.4);
+      ctx.lineTo(carW * 1.5, carH * 0.75);
+      ctx.lineTo(carW * 0.92, carH * 0.62);
+      ctx.closePath();
+      ctx.fill();
 
-        // Sleek Car Roof & Hood Contour Outline
-        ctx.strokeStyle = `rgba(255, 255, 255, ${headlightAlpha * 0.25})`;
-        ctx.lineWidth = 2;
+      // Wheels
+      const wheelR = carH * 0.18;
+      const wheelY = carH * 0.68;
+      [carW * 0.22, carW * 0.78].forEach((wx) => {
+        ctx.fillStyle = '#111111';
         ctx.beginPath();
-        ctx.moveTo(centerX - 240 * scale, headlightY + 20);
-        ctx.quadraticCurveTo(centerX - 160 * scale, centerY - 60 * scale, centerX, centerY - 80 * scale);
-        ctx.quadraticCurveTo(centerX + 160 * scale, centerY - 60 * scale, centerX + 240 * scale, headlightY + 20);
+        ctx.arc(wx, wheelY, wheelR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
         ctx.stroke();
-      }
 
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(render);
-      } else {
-        // Transition to Logo phase when canvas animation finishes
-        setPhase('logo');
+        // Spoke rotation
+        const angle = p * Math.PI * 20;
+        ctx.save();
+        ctx.translate(wx, wheelY);
+        ctx.rotate(angle);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < 5; i++) {
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos((i * Math.PI * 2) / 5) * (wheelR - 2), Math.sin((i * Math.PI * 2) / 5) * (wheelR - 2));
+          ctx.stroke();
+        }
+        ctx.restore();
+      });
+
+      ctx.restore();
+
+      if (p < 1) {
+        animId = requestAnimationFrame(render);
       }
     };
 
-    animationFrameId = requestAnimationFrame(render);
+    animId = requestAnimationFrame(render);
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animId);
     };
   }, [active, useCanvasFallback, phase]);
-
-  // 4. Video Event Handlers
-  const handleVideoEnded = () => {
-    setPhase('logo');
-  };
-
-  const handleVideoError = () => {
-    setUseCanvasFallback(true);
-  };
-
-  // 5. Logo Phase Auto Transition to Fade Out
-  useEffect(() => {
-    if (!active || phase !== 'logo') return;
-
-    // Show logo for 1.4 seconds (0.6s reveal + 0.8s hold), then fade into homepage
-    const logoTimer = setTimeout(() => {
-      setPhase('fadeout');
-    }, 1400);
-
-    return () => clearTimeout(logoTimer);
-  }, [active, phase]);
-
-  // 6. Complete Intro Exit & Cleanup
-  useEffect(() => {
-    if (!active || phase !== 'fadeout') return;
-
-    const fadeoutTimer = setTimeout(() => {
-      finishIntro();
-    }, 700);
-
-    return () => clearTimeout(fadeoutTimer);
-  }, [active, phase]);
-
-  const finishIntro = () => {
-    setPhase('ended');
-    setActive(false);
-    document.body.style.overflow = '';
-
-    if (INTRO_CONFIG.INTRO_PLAY_ONCE_PER_SESSION && typeof window !== 'undefined') {
-      sessionStorage.setItem(INTRO_CONFIG.SESSION_STORAGE_KEY, 'true');
-    }
-  };
-
-  const handleSkip = () => {
-    setPhase('fadeout');
-    setTimeout(() => {
-      finishIntro();
-    }, 300);
-  };
 
   if (!active || phase === 'ended') return null;
 
   return (
     <AnimatePresence>
       <motion.div
-        key="hailmary_cinematic_intro"
+        key="hailmary_lamborghini_loader"
         initial={{ opacity: 1 }}
         animate={{ opacity: phase === 'fadeout' ? 0 : 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed inset-0 z-[99999] bg-[#050505] text-white flex items-center justify-center overflow-hidden select-none"
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed inset-0 z-[999999] bg-[#F5F5F3] text-[#111111] flex flex-col items-center justify-between py-12 px-6 overflow-hidden select-none"
       >
         {/* ==================================================================== */}
-        {/* 1. CINEMATIC VEHICLE REVEAL STAGE (Video / Canvas Engine) */}
+        {/* 1. TOP BRAND HEADER: HAIL MARY EMBLEM & LOGO */}
         {/* ==================================================================== */}
-        {phase === 'video' && (
-          <div className="absolute inset-0 w-full h-full">
-            {!useCanvasFallback ? (
-              <video
-                ref={videoRef}
-                autoPlay
-                muted
-                playsInline
-                preload="auto"
-                onEnded={handleVideoEnded}
-                onError={handleVideoError}
-                onPlay={() => setUseCanvasFallback(false)}
-                className="w-full h-full object-cover object-center"
-              >
-                <source src={INTRO_CONFIG.DESKTOP_VIDEO_PATH} type="video/mp4" />
-                <source src={INTRO_CONFIG.MOBILE_VIDEO_PATH} type="video/mp4" />
-              </video>
-            ) : (
-              <canvas ref={canvasRef} className="w-full h-full object-cover block" />
-            )}
-
-            {/* Dark Vignette Overlay */}
-            <div className="absolute inset-0 bg-radial from-transparent via-black/40 to-black pointer-events-none" />
+        <motion.div
+          initial={{ opacity: 0, y: -15, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center text-center mt-6 z-20"
+        >
+          <div className="w-12 h-12 rounded-full bg-white text-[#111111] flex items-center justify-center shadow-md mb-2.5 border border-[#E5E5E5]">
+            <Car className="w-6 h-6 text-[#111111]" />
           </div>
-        )}
+          <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-[#111111] uppercase font-sans">
+            HAIL MARY
+          </h1>
+          <span className="text-[9px] sm:text-[11px] tracking-[0.3em] font-bold uppercase text-[#666666] mt-0.5 block">
+            RENTAL SERVICES
+          </span>
+        </motion.div>
 
         {/* ==================================================================== */}
-        {/* 2. HAIL MARY OFFICIAL BRAND LOGO REVEAL STAGE */}
+        {/* 2. MIDDLE STAGE: LAMBORGHINI SUPERCAR CAROUSEL (VIDEO / CANVAS) */}
         {/* ==================================================================== */}
-        {(phase === 'logo' || phase === 'fadeout') && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-20 flex flex-col items-center justify-center text-center p-6"
-          >
-            {/* Official Hail Mary Emblem Badge */}
+        <div className="relative w-full max-w-4xl h-56 sm:h-72 flex items-center justify-center overflow-hidden">
+          {!useCanvasFallback ? (
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              playsInline
+              preload="auto"
+              onError={() => setUseCanvasFallback(true)}
+              className="w-full h-full object-contain object-center"
+            >
+              <source src={LOADER_CONFIG.VIDEO_PATH} type="video/mp4" />
+              <source src="/videos/intro.mp4" type="video/mp4" />
+            </video>
+          ) : (
+            <canvas ref={canvasRef} className="w-full h-full block" />
+          )}
+        </div>
+
+        {/* ==================================================================== */}
+        {/* 3. BOTTOM: SUBTLE ROAD LINE & THIN 100% PROGRESS BAR */}
+        {/* ==================================================================== */}
+        <div className="w-full max-w-md flex flex-col items-center mb-8 space-y-3 z-20">
+          <div className="w-full h-[2px] bg-[#E5E5E5] rounded-full overflow-hidden relative">
             <motion.div
-              initial={{ scale: 0.85, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white text-[#111111] flex items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.3)] mb-4 border border-white/40"
-            >
-              <Car className="w-8 h-8 sm:w-10 sm:h-10 text-[#111111]" />
-            </motion.div>
-
-            {/* Official Hail Mary Brand Text */}
-            <motion.h1
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white uppercase drop-shadow-2xl font-sans"
-            >
-              HAIL MARY
-            </motion.h1>
-
-            <motion.span
-              initial={{ y: 5, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-[10px] sm:text-xs tracking-[0.35em] font-extrabold uppercase text-gray-300 mt-1 block"
-            >
-              RENTAL SERVICES
-            </motion.span>
-          </motion.div>
-        )}
-
-        {/* ==================================================================== */}
-        {/* 3. MINIMAL OPTIONAL SKIP BUTTON */}
-        {/* ==================================================================== */}
-        {INTRO_CONFIG.SKIP_BUTTON_ENABLED && phase !== 'fadeout' && (
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            onClick={handleSkip}
-            className="fixed bottom-6 right-6 z-50 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white/80 hover:text-white text-xs font-semibold backdrop-blur-md transition-all flex items-center gap-1.5 cursor-pointer shadow-lg active:scale-95"
-            aria-label="Skip Intro"
-          >
-            <span>SKIP</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </motion.button>
-        )}
+              style={{ width: `${progress}%` }}
+              className="h-full bg-[#111111] transition-all duration-75 ease-out rounded-full"
+            />
+          </div>
+        </div>
       </motion.div>
     </AnimatePresence>
   );

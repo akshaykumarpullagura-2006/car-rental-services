@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle, MessageSquare, Sparkles } from 'lucide-react';
 import { getWhatsAppLink } from '@/lib/whatsapp';
 
 export const FaqSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const shouldReduceMotion = useReducedMotion();
 
   const faqs = [
     {
@@ -40,69 +39,36 @@ export const FaqSection: React.FC = () => {
     customMessage: 'Hello Hail Mary Concierge, I have a question regarding rental requirements.'
   });
 
-  // Luxury Automotive Easing Curve: cubic-bezier(0.22, 1, 0.36, 1)
   const premiumEase = [0.22, 1, 0.36, 1];
 
   return (
     <section className="py-20 bg-[#F6F6F4] border-t border-[#E5E5E5] overflow-hidden">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header Area with Sequential Scroll Reveal */}
+        {/* Header Area */}
         <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          
-          {/* 1. FAQ Badge */}
-          <motion.div
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15, scale: 0.97 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.5, ease: premiumEase }}
-            className="inline-flex items-center gap-2 text-xs uppercase font-bold text-[#111111] tracking-wider px-3.5 py-1 rounded-full bg-white border border-[#E5E5E5] shadow-xs"
-          >
+          <div className="inline-flex items-center gap-2 text-xs uppercase font-bold text-[#111111] tracking-wider px-3.5 py-1 rounded-full bg-white border border-[#E5E5E5] shadow-xs">
             <Sparkles className="w-3.5 h-3.5 text-[#111111]" />
             <span>NEED ASSISTANCE?</span>
-          </motion.div>
+          </div>
 
-          {/* 2. Main Heading */}
-          <motion.h2
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: premiumEase }}
-            className="text-3xl sm:text-4xl font-extrabold text-[#111111] tracking-tight uppercase"
-          >
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111111] tracking-tight uppercase">
             Frequently Asked Questions
-          </motion.h2>
+          </h2>
 
-          {/* 3. Description */}
-          <motion.p
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.45, delay: 0.2, ease: premiumEase }}
-            className="text-[#666666] text-xs sm:text-sm leading-relaxed"
-          >
+          <p className="text-[#666666] text-xs sm:text-sm leading-relaxed">
             Everything you need to know about our luxury rental policies, insurance, and doorstep delivery.
-          </motion.p>
+          </p>
         </div>
 
-        {/* FAQ Accordion Cards List (Staggered Entrance) */}
+        {/* FAQ Accordion Cards List */}
         <div className="space-y-3.5">
           {faqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
 
             return (
-              <motion.div
+              <div
                 key={idx}
-                initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{
-                  duration: 0.5,
-                  delay: shouldReduceMotion ? 0 : 0.25 + idx * 0.07,
-                  ease: premiumEase,
-                }}
-                whileHover={shouldReduceMotion ? {} : { y: -2 }}
-                whileTap={{ scale: 0.99 }}
                 onClick={() => setOpenIndex(isOpen ? null : idx)}
                 className={`group relative bg-white rounded-2xl border p-5 sm:p-6 cursor-pointer transition-all duration-250 select-none ${
                   isOpen
@@ -139,7 +105,7 @@ export const FaqSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Animated Accordion Answer (height 0 -> auto & opacity 0 -> 1) */}
+                {/* Animated Accordion Answer */}
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
@@ -169,19 +135,13 @@ export const FaqSection: React.FC = () => {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
         {/* Bottom Concierge CTA Box */}
-        <motion.div
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.5, delay: 0.6, ease: premiumEase }}
-          className="mt-12 text-center bg-white rounded-3xl p-8 border border-[#E5E5E5] shadow-xs space-y-2"
-        >
+        <div className="mt-12 text-center bg-white rounded-3xl p-8 border border-[#E5E5E5] shadow-xs space-y-2">
           <h3 className="text-lg font-bold text-[#111111]">Have a Specific Question?</h3>
           <p className="text-xs text-[#666666]">Our concierge desk is available 24 hours a day.</p>
           <div className="pt-2">
@@ -191,7 +151,7 @@ export const FaqSection: React.FC = () => {
               </button>
             </a>
           </div>
-        </motion.div>
+        </div>
 
       </div>
     </section>
