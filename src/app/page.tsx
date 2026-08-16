@@ -48,13 +48,13 @@ const HomeSectionPanel: React.FC<HomeSectionPanelProps> = ({
       ref={panelRef}
       id={id}
       style={{ zIndex }}
-      className="sticky top-0 w-full min-h-screen flex flex-col justify-start"
+      className="sticky top-0 w-full flex flex-col justify-start"
     >
       <motion.div
         style={{ y, scale }}
-        className={`w-full min-h-screen ${bg} rounded-t-[32px] sm:rounded-t-[48px] lg:rounded-t-[60px] border-t border-white/80 shadow-[0_-30px_90px_rgba(0,0,0,0.3)] relative overflow-hidden transition-shadow duration-300`}
+        className={`w-full ${bg} rounded-t-[32px] sm:rounded-t-[48px] lg:rounded-t-[60px] border-t border-white/80 shadow-[0_-30px_90px_rgba(0,0,0,0.3)] relative overflow-hidden transition-shadow duration-300`}
       >
-        <div className="w-full h-full pb-20 lg:pb-10">
+        <div className="w-full h-full pb-8 sm:pb-12">
           {children}
         </div>
       </motion.div>
