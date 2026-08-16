@@ -11,8 +11,8 @@ export interface Car {
   model: string;
   year: number;
   category: 'Hatchback' | 'Sedan' | 'SUV' | 'MUV' | 'Luxury' | 'Sports' | 'Electric' | 'Self Drive' | string;
-  fuelType: 'Petrol' | 'Diesel' | 'Hybrid' | 'Electric';
-  transmission: 'Automatic' | 'Manual' | 'Dual-Clutch';
+  fuelType: 'Petrol' | 'Diesel' | 'Hybrid' | 'Electric' | string;
+  transmission: 'Automatic' | 'Manual' | 'Dual-Clutch' | 'Manual / Automatic' | string;
   seating: number;
   engine: string;
   horsepower: number;
